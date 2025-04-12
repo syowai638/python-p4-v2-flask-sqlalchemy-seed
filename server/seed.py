@@ -1,21 +1,15 @@
-#!/usr/bin/env python3
-#server/seed.py
-
-from app import app
-from models import db, Pet
+from app import app, db
+from models import Pet
 
 with app.app_context():
+    print("Clearing existing data...")
+    Pet.query.delete()
 
-    # Create an empty list
-    pets = []
+    print("Seeding new data...")
+    pet1 = Pet(name='Buddy', species='Dog', color='Brown', age='5')
+    pet2 = Pet(name='Mittens', species='Cat', color='White', age='3')
 
-    # Add some Pet instances to the list
-    pets.append(Pet(name = "Fido", species = "Dog"))
-    pets.append(Pet(name = "Whiskers", species = "Cat"))
-    pets.append(Pet(name = "Hermie", species = "Hamster"))
-
-    # Insert each Pet in the list into the database table
-    db.session.add_all(pets)
-
-    # Commit the transaction
+    db.session.add_all([pet1, pet2])
     db.session.commit()
+
+    print("Database seeded successfully.")
